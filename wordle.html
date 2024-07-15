@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle</title>
+    <style>
+        body {
+            background-color:white;
+        }
+        input {
+            width: 40px;
+            height: 40px;
+            font-size: 30px;
+            text-align: center;
+            margin: 2px;
+        }
+        .row {
+            margin-bottom: 5px;
+        }
+        h1 {
+            color: powderblue;
+        }
+    </style>
+</head>
+<body>
+
+<h1>WORDLE</h1>
+<ol>
+    <li>글자, 위치 모두 일치: 초록색</li>
+    <li>글자만 일치, 위치 일치X: 노란색</li>
+    <li>글자, 위치 모두 일치X: 회색</li>
+</ol>
+
+<div id="gameArea">
+    <div class="row"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"></div>
+    <div class="row"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"></div>
+    <div class="row"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"></div>
+    <div class="row"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"></div>
+    <div class="row"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"></div>
+    <div class="row"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"><input class="input"></div>
+</div>
+
+<button id="submit-button">submit</button>
+
+<script>
+    const words = ['orange', 'banana', 'forest', 'rocket', 'monkey', 'studio','garden','theory','korean','guitar','violin'];
+    let answer = words[Math.floor(Math.random() * words.length)];
+    let attempts = 0;
+
+    document.getElementById('submit-button').addEventListener('click', function() {
+        if (attempts >= 6) {
+            alert('모든 기회를 사용했습니다! 정답은 ' + answer + '입니다.');
+            return;
+        }
+
+        const inputs = document.querySelectorAll('.row')[attempts].querySelectorAll('.input');
+        let guess = '';
+        inputs.forEach(input => guess += input.value.toLowerCase());
+
+        if (guess.length !== 6) {
+            alert('6글자 단어를 입력하세요.');
+            return;
+        }
+
+        for (let i = 0; i < 6; i++) {
+            if (guess[i] === answer[i]) {
+                inputs[i].style.background = 'green';
+            } else if (answer.includes(guess[i])) {
+                inputs[i].style.background = 'yellow';
+            } else {
+                inputs[i].style.background = 'grey';
+            }
+        }
+
+        if (guess === answer) {
+            alert('정답입니다! 게임을 재시작합니다.');
+            resetGame();
+        } else {
+            attempts++;
+            if (attempts >= 6) {
+                alert('모든 기회를 사용했습니다! 정답은 ' + answer + '입니다.');
+            }
+        }
+    });
+
+    function resetGame() {
+        attempts = 0;
+        answer = words[Math.floor(Math.random() * words.length)];
+        document.querySelectorAll('.input').forEach(input => {
+            input.value = '';
+            input.style.background = '';
+        });
+    }
+</script>
+
+</body>
+</html>
